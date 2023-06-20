@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "./build/index.js",
+  "type": "module",
   "scripts": {
     "build": "./node_modules/.bin/babel src -d build"
   },
@@ -37,5 +38,11 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.14.8",
     "babel-loader": "^8.2.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "all",
+    "printWidth": 120
   }
 }
