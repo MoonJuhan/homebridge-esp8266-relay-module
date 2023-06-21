@@ -56,7 +56,7 @@ class ESP8266RelayModule {
         method: 'get',
       })
     } catch (error) {
-      this.log.info('Axios Error')
+      this.log.error('Axios Error')
       this.relayOn = false
     } finally {
       return this.relayOn
@@ -77,7 +77,7 @@ class ESP8266RelayModule {
       this.relayOn = value
       this.log.info('Set relay module success.')
     } catch (error) {
-      this.log.info('Set relay module failed.')
+      this.log.error('Set relay module failed.')
     }
   }
 }
