@@ -23,10 +23,15 @@ class ESP8266RelayModule {
     this.name = name;
     this.ip = ip;
     this.log(`Name : ${this.name}, IP : ${this.ip}`);
-    this.switchService = new this.api.hap.Service.Switch(this.name);
-    this.switchService.getCharacteristic(this.api.hap.Characteristic.On).onGet(this.handleOnGet.bind(this)) // bind to getOnHandler method below
-    .onSet(this.handleOnSet.bind(this));
+
+    // this.switchService = new this.api.hap.Service.Switch(this.name)
+
+    // this.switchService
+    //   .getCharacteristic(this.api.hap.Characteristic.On)
+    //   .onGet(this.handleOnGet.bind(this)) // bind to getOnHandler method below
+    //   .onSet(this.handleOnSet.bind(this))
   }
+
   handleOnGet() {
     this.log.debug('Triggered GET On');
     const currentValue = 1;
