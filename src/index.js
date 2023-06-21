@@ -41,10 +41,14 @@ class ESP8266RelayModule {
 
   async getOnHandler() {
     this.log.info('Get relay module status.')
-    this.log.info(this.getRelayStatusTime)
-    this.log.info(dayjs().diff(this.getRelayStatusTime, 'second', true))
+
+    if (dayjs().diff(this.getRelayStatusTime, 'second', true) < 20) {
+      return this.relayOn
+    }
 
     try {
+      this.log.info('Call get relay status api.')
+
       this.getRelayStatusTime = new Date()
       await axios({
         url: '/relay',
