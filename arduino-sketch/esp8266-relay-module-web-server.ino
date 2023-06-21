@@ -13,6 +13,11 @@ void handleRoot()
     server.send(200, "text/plain", "Hello from ESP8266!");
 }
 
+void handleGet()
+{
+    server.send(200, "text/plain", "Online");
+}
+
 void setRelayModule(String relayOn)
 {
     pinMode(relayPin, OUTPUT);
@@ -65,6 +70,7 @@ void setup()
     Serial.println("IP address: " + WiFi.localIP().toString());
 
     server.on("/", handleRoot);
+    server.on("/relay", HTTP_GET, handleGet);
     server.on("/relay", HTTP_PUT, handlePut);
 
     server.begin();
