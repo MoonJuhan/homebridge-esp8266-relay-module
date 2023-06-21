@@ -13,9 +13,10 @@ class ESP8266RelayModule {
 
     const { Service, Characteristic } = api.hap
 
-    const { name, ip } = config
-    this.ip = ip
+    const { name, ip, cacheTime } = config
     this.log = log
+    this.ip = ip
+    this.cacheTime = cacheTime || 20
 
     log(`Name : ${name}, IP : ${ip}`)
 
@@ -42,7 +43,7 @@ class ESP8266RelayModule {
   async getOnHandler() {
     this.log.info('Get relay module status.')
 
-    if (dayjs().diff(this.getRelayStatusTime, 'second', true) < 20) {
+    if (dayjs().diff(this.getRelayStatusTime, 'second', true) < cacheTime) {
       return this.relayOn
     }
 
