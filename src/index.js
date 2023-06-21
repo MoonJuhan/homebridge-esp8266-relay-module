@@ -8,51 +8,71 @@ const setup = (homebridge) => {
 
 class ESP8266RelayModule {
   constructor(log, config, api) {
-    log('ESP8266RelayModule Start!')
-    this.log = log
-    this.config = config
-    this.api = api
+    log('ESP8266RelayModule start.')
 
     const { Service, Characteristic } = api.hap
-    this.Service = Service
-    this.Characteristic = Characteristic
 
     const { name, ip } = config
-    this.name = name
     this.ip = ip
-    this.log(`Name : ${this.name}, IP : ${this.ip}`)
+    this.log = log
 
-    // this.switchService = new this.api.hap.Service.Switch(this.name)
+    log(`Name : ${name}, IP : ${ip}`)
 
-    // this.switchService
-    //   .getCharacteristic(this.api.hap.Characteristic.On)
-    //   .onGet(this.handleOnGet.bind(this)) // bind to getOnHandler method below
-    //   .onSet(this.handleOnSet.bind(this))
+    this.informationService = new Service.AccessoryInformation()
+      .setCharacteristic(Characteristic.Manufacturer, 'Custom Manufacturer')
+      .setCharacteristic(Characteristic.Model, 'Custom Model')
+
+    this.switchService = new Service.Switch(name)
+    this.switchService
+      .getCharacteristic(Characteristic.On)
+      .onGet(this.getOnHandler.bind(this))
+      .onSet(this.setOnHandler.bind(this))
+
+    this.relayOn = false
+
+    this.setOnHandler(false)
   }
 
-  handleOnGet() {
-    this.log.debug('Triggered GET On')
-
-    const currentValue = 1
-
-    return currentValue
+  getServices() {
+    return [this.informationService, this.switchService]
   }
 
-  async handleOnSet(value) {
-    this.log.debug('Triggered SET On:', value)
+  async getOnHandler() {
+    this.log.info('Get relay module status.')
 
-    // this.log('Axios', this.ip)
-
+    // TODO: Call get api
     // try {
     //   await axios({
     //     url: '/relay',
     //     baseURL: `http://${this.ip}`,
-    //     method: 'put',
-    //     data: { relayOn },
+    //     method: 'get',
     //   })
     // } catch (error) {
-    //   this.log(error)
+    //   this.log.info('Axios Error')
+    //   this.relayOn = false
+    // } finally {
+    //   return this.relayOn
     // }
+
+    return this.relayOn
+  }
+
+  async setOnHandler(value) {
+    this.log.info('Set relay module:', value)
+
+    try {
+      await axios({
+        url: '/relay',
+        baseURL: `http://${this.ip}`,
+        method: 'put',
+        data: { relayOn: value },
+      })
+
+      this.relayOn = value
+      this.log.info('Set relay module success.')
+    } catch (error) {
+      this.log.info('Set relay module failed.')
+    }
   }
 }
 
