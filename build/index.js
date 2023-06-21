@@ -14,10 +14,12 @@ class ESP8266RelayModule {
     } = api.hap;
     const {
       name,
-      ip
+      ip,
+      cacheTime
     } = config;
-    this.ip = ip;
     this.log = log;
+    this.ip = ip;
+    this.cacheTime = cacheTime || 20;
     log(`Name : ${name}, IP : ${ip}`);
     this.informationService = new Service.AccessoryInformation().setCharacteristic(Characteristic.Manufacturer, 'Custom Manufacturer').setCharacteristic(Characteristic.Model, 'Custom Model');
     this.switchService = new Service.Switch(name);
@@ -31,7 +33,7 @@ class ESP8266RelayModule {
   }
   async getOnHandler() {
     this.log.info('Get relay module status.');
-    if (dayjs().diff(this.getRelayStatusTime, 'second', true) < 20) {
+    if (dayjs().diff(this.getRelayStatusTime, 'second', true) < cacheTime) {
       return this.relayOn;
     }
     try {
@@ -43,7 +45,7 @@ class ESP8266RelayModule {
         method: 'get'
       });
     } catch (error) {
-      this.log.info('Axios Error');
+      this.log.error('Axios Error');
       this.relayOn = false;
     } finally {
       return this.relayOn;
@@ -63,7 +65,7 @@ class ESP8266RelayModule {
       this.relayOn = value;
       this.log.info('Set relay module success.');
     } catch (error) {
-      this.log.info('Set relay module failed.');
+      this.log.error('Set relay module failed.');
     }
   }
 }
