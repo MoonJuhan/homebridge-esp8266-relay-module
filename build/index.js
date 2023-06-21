@@ -1,6 +1,6 @@
 'use strict';
 
-import axios from 'axios';
+const axios = require('axios');
 const setup = homebridge => {
   homebridge.registerAccessory('homebridge-esp8266-relay-module', 'ESP8266RelayModule', ESP8266RelayModule);
 };
@@ -33,6 +33,20 @@ class ESP8266RelayModule {
   }
   async handleOnSet(value) {
     this.log.debug('Triggered SET On:', value);
+
+    // this.log('Axios', this.ip)
+
+    // try {
+    //   await axios({
+    //     url: '/relay',
+    //     baseURL: `http://${this.ip}`,
+    //     method: 'put',
+    //     data: { relayOn },
+    //   })
+    // } catch (error) {
+    //   this.log(error)
+    // }
   }
 }
+
 module.exports = setup;
