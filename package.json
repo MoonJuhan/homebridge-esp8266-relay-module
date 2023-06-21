@@ -1,6 +1,6 @@
 {
   "name": "homebridge-esp8266-relay-module",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Allows homebridge to use ESP8266 Relay Module",
   "main": "./build/index.js",
   "scripts": {
