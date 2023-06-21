@@ -1,6 +1,7 @@
 'use strict'
 
 const axios = require('axios')
+const dayjs = require('dayjs')
 
 const setup = (homebridge) => {
   homebridge.registerAccessory('homebridge-esp8266-relay-module', 'ESP8266RelayModule', ESP8266RelayModule)
@@ -28,6 +29,7 @@ class ESP8266RelayModule {
       .onGet(this.getOnHandler.bind(this))
       .onSet(this.setOnHandler.bind(this))
 
+    this.getRelayStatusTime = null
     this.relayOn = false
 
     this.setOnHandler(false)
@@ -39,22 +41,22 @@ class ESP8266RelayModule {
 
   async getOnHandler() {
     this.log.info('Get relay module status.')
+    this.log.info(this.getRelayStatusTime)
+    this.log.info(dayjs().diff(this.getRelayStatusTime, 'second', true))
 
-    // TODO: Call get api
-    // try {
-    //   await axios({
-    //     url: '/relay',
-    //     baseURL: `http://${this.ip}`,
-    //     method: 'get',
-    //   })
-    // } catch (error) {
-    //   this.log.info('Axios Error')
-    //   this.relayOn = false
-    // } finally {
-    //   return this.relayOn
-    // }
-
-    return this.relayOn
+    try {
+      this.getRelayStatusTime = new Date()
+      await axios({
+        url: '/relay',
+        baseURL: `http://${this.ip}`,
+        method: 'get',
+      })
+    } catch (error) {
+      this.log.info('Axios Error')
+      this.relayOn = false
+    } finally {
+      return this.relayOn
+    }
   }
 
   async setOnHandler(value) {
