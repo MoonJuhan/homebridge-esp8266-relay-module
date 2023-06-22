@@ -11,7 +11,7 @@
     "url": "git+https://github.com/MoonJuhan/homebridge-esp8266-relay-module.git"
   },
   "author": "MoonJuhan",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "homebridge-plugin"
   ],
