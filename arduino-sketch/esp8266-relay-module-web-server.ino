@@ -24,11 +24,11 @@ void setRelayModule(String relayOn)
 
     if (relayOn == "true")
     {
-        digitalWrite(relayPin, HIGH);
+        digitalWrite(relayPin, LOW);
     }
     else
     {
-        digitalWrite(relayPin, LOW);
+        digitalWrite(relayPin, HIGH);
     }
 }
 
@@ -57,7 +57,7 @@ void setup()
     Serial.begin(115200);
 
     pinMode(relayPin, OUTPUT);
-    digitalWrite(relayPin, LOW);
+    digitalWrite(relayPin, HIGH);
 
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
